@@ -5,7 +5,7 @@ export default function Intro({onSignIn}) {
       <p>Manage You Task Checklist Easily</p>
 
       {/* Button to trigger Google sign-in */}
-      <button onClick={onSignIn}>Let's Start</button>
+      <button onClick={onSignIn}>{"Let's Start"}</button>
     </div>
   )
 }
