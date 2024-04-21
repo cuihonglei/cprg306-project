@@ -10,6 +10,7 @@ import { getTodos, addTodo } from "./_services/todo-list-service";
 // Import the components
 import Intro from "./components/intro";
 import TodoList from "./components/todo-list";
+import Head from "./components/head";
 
 
 export default function Home() {
@@ -18,7 +19,7 @@ export default function Home() {
   const [todos, setTodos] = useState([]);
 
   // Use the useUserAuth hook to get the user object and the login and logout functions
-  const { user, googleSignIn, firebaseSignOut } = useUserAuth();
+  const { user, googleSignIn } = useUserAuth();
 
   // Sign in to Firebase with Google authentication
   const handleGoogleSignIn = async () => {
@@ -27,16 +28,6 @@ export default function Home() {
     } catch (error) {
       // Handle sign-in error
       console.error("Error signing in with Google:", error);
-    }
-  };
-
-  // Sign out of Firebase
-  const handleSignOut = async () => {
-    try {
-      await firebaseSignOut();
-    } catch (error) {
-      // Handle sign-out error
-      console.error("Error signing out:", error);
     }
   };
 
@@ -68,13 +59,11 @@ export default function Home() {
   }, [user]);
 
   return (
-    <main className="flex min-h-screen flex-col items-center p-24">
+    <main className="flex min-h-screen flex-col items-center">
       {user ? (
-        <div>
-          <p>Welcome, {user.displayName} ({user.email}).</p>
-
-          {/* Button to trigger sign-out */}
-          <button onClick={handleSignOut}>Sign out</button>
+        <div className="w-full">
+          {/* Head */}
+          <Head />
 
           {/* Todo list */}
           <TodoList todos={todos} />
