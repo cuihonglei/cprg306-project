@@ -10,8 +10,6 @@ export default function Head() {
   // Use the useUserAuth hook to get the user object and the login and logout functions
   const { user, firebaseSignOut } = useUserAuth();
 
-  console.log(user);
-
   // Sign out of Firebase
   const handleSignOut = async () => {
     try {

@@ -23,3 +23,12 @@ export const addTodo = async (userId, todo) => {
   // Resturn item ID.
   return docRef.id;
 };
+
+export const removeTodo = async (userId, todo) => {
+  // TODO
+
+};
+
+export const completeTodo = async (userId, todo) => {
+  // TODO
+};

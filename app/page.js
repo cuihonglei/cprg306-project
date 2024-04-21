@@ -5,13 +5,12 @@ import { useState, useEffect } from "react";
 // Import the useUserAuth hook
 import { useUserAuth } from "./_utils/auth-context";
 // Import the db services
-import { getTodos, addTodo } from "./_services/todo-list-service";
+import { getTodos, addTodo, removeTodo, completeTodo } from "./_services/todo-list-service";
 
 // Import the components
 import Intro from "./components/intro";
 import TodoList from "./components/todo-list";
 import Head from "./components/head";
-
 
 export default function Home() {
 
@@ -31,6 +30,24 @@ export default function Home() {
     }
   };
 
+  const handleAdd = async (todo) => {
+    try {
+      const id = await addTodo(user.uid, todo);
+      todo.id = id;
+      setTodos((prevTodos) => [...prevTodos, todo]);
+    } catch (error) {
+      console.error("Error add todo:", error);
+    }
+  };
+
+  const handleRemove = async (todo) => {
+    console.log('handRemove');
+  }
+
+  const handleComplete = async (todo) => {
+    console.log('handleComplete');
+  };
+
   const loadTodos = async () => {
     try {
       const todosData = await getTodos(user.uid);
@@ -38,16 +55,6 @@ export default function Home() {
       setTodos(todosData);
     } catch (error) {
       console.error("Error get todos:", error);
-    }
-  };
-
-  const handleAddTodo = async (todo) => {
-    try {
-      const id = await addTodo(user.uid, todo);
-      todo.id = id;
-      setTodos((prevTodos) => [...prevTodos, todo]);
-    } catch (error) {
-      console.error("Error add todo:", error);
     }
   };
 
@@ -66,7 +73,7 @@ export default function Home() {
           <Head />
 
           {/* Todo list */}
-          <TodoList todos={todos} />
+          <TodoList todos={todos} onAdd={handleAdd} onRemove={handleRemove} onComplete={handleComplete} />
         </div>
       ) : (
         <Intro onSignIn={handleGoogleSignIn} />
