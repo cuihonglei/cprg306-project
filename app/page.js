@@ -17,6 +17,9 @@ export default function Home() {
   // Todo list for current user.
   const [todos, setTodos] = useState([]);
 
+  // Tasks count pending.
+  const [pendingCount, setPendingCount] = useState(0);
+
   // Use the useUserAuth hook to get the user object and the login and logout functions
   const { user, googleSignIn } = useUserAuth();
 
@@ -41,11 +44,40 @@ export default function Home() {
   };
 
   const handleRemove = async (todo) => {
-    console.log('handRemove');
-  }
-
+    try {
+      // Call the removeTodo service function to delete the todo item
+      const success = await removeTodo(user.uid, todo.id);
+      if (success) {
+        // Filter out the removed todo item from the todos state
+        setTodos((prevTodos) => prevTodos.filter((item) => item.id !== todo.id));
+      } else {
+        console.error(`Failed to remove todo with ID ${todo.id}`);
+      }
+    } catch (error) {
+      console.error("Error removing todo:", error);
+    }
+  };
+  
   const handleComplete = async (todo) => {
-    console.log('handleComplete');
+    try {
+      // Determine the new completion status (toggle)
+      const newCompletedStatus = !todo.completed;
+  
+      // Call the completeTodo service function to update the completion status
+      const success = await completeTodo(user.uid, todo.id, newCompletedStatus);
+      if (success) {
+        // Update the completion status of the todo item in the todos state
+        setTodos((prevTodos) =>
+          prevTodos.map((item) =>
+            item.id === todo.id ? { ...item, completed: newCompletedStatus } : item
+          )
+        );
+      } else {
+        console.error(`Failed to update completion status for todo with ID ${todo.id}`);
+      }
+    } catch (error) {
+      console.error("Error updating completion status:", error);
+    }
   };
 
   const loadTodos = async () => {
@@ -65,12 +97,17 @@ export default function Home() {
     }
   }, [user]);
 
+  // Recalculate pending count whenever todos change
+  useEffect(() => {
+    setPendingCount(todos.filter((todo) => !todo.completed).length);
+  }, [todos]);
+
   return (
     <main className="flex min-h-screen flex-col items-center">
       {user ? (
         <div className="w-full">
           {/* Head */}
-          <Head />
+          <Head pendingCount={pendingCount} />
 
           {/* Todo list */}
           <TodoList todos={todos} onAdd={handleAdd} onRemove={handleRemove} onComplete={handleComplete} />

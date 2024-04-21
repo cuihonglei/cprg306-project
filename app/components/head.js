@@ -2,10 +2,7 @@
 import { useState } from "react";
 import { useUserAuth } from "../_utils/auth-context";
 
-export default function Head() {
-
-  // Tasks count pending.
-  const [pendingCount, setPendingCount] = useState(0);
+export default function Head({ pendingCount }) {
 
   // Use the useUserAuth hook to get the user object and the login and logout functions
   const { user, firebaseSignOut } = useUserAuth();
